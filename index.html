@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="zh-Hant">
+<html lang="zh-CN">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>數獨 — 互動平面版</title>
+  <title>数独 — 互动平面版</title>
   <style>
     *, *::before, *::after {
       box-sizing: border-box;
@@ -422,7 +422,7 @@
     /* Action Controls */
     .action-grid {
       display: grid;
-      grid-template-columns: repeat(5, 1fr);
+      grid-template-columns: repeat(3, 1fr);
       gap: 8px;
       margin-bottom: 12px;
     }
@@ -651,20 +651,20 @@
           </svg>
         </div>
         <div style="min-width:0;">
-          <h1 id="puzzle-title" class="brand-title">數獨題目 #1</h1>
-          <p class="brand-sub">點擊格子或使用方向鍵與數字 1–9 作答</p>
+          <h1 id="puzzle-title" class="brand-title">数独书（第一页）同款</h1>
+          <p class="brand-sub">每横排、直排、九宫格，1–9 都不会重复</p>
         </div>
       </div>
 
       <div class="header-tools">
         <div class="timer-pill">
           <span id="timer-display">00:00</span>
-          <button id="pause-btn" type="button" title="暫停／繼續" class="icon-btn">
+          <button id="pause-btn" type="button" title="暂停／继续" class="icon-btn">
             <svg id="pause-icon" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M6 5h4v14H6zm8 0h4v14h-4z"/></svg>
             <svg id="play-icon" class="hidden" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
           </button>
         </div>
-        <button id="sound-btn" type="button" title="音效開關" class="icon-btn sound-btn">
+        <button id="sound-btn" type="button" title="音效开关" class="icon-btn sound-btn">
           <svg id="sound-on-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
           <svg id="sound-off-icon" class="hidden" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>
         </button>
@@ -675,19 +675,19 @@
     <div class="mode-toolbar">
       <div class="toolbar-group">
         <div class="gen-group">
-          <select id="difficulty-select" aria-label="難度選擇" class="diff-select">
-            <option value="easy">簡單</option>
+          <select id="difficulty-select" aria-label="难度选择" class="diff-select">
+            <option value="easy">简单</option>
             <option value="medium" selected>中等</option>
-            <option value="hard">困難</option>
+            <option value="hard">困难</option>
           </select>
-          <button id="random-btn" type="button" class="btn-primary-sm">隨機生成</button>
+          <button id="random-btn" type="button" class="btn-primary-sm">随机生成</button>
         </div>
       </div>
       <div class="toolbar-group toolbar-right">
         <button id="custom-list-btn" type="button" class="btn-outline-sm">
-          自訂題目 <span id="custom-count-badge" class="badge-count hidden">0</span>
+          自定义题目 <span id="custom-count-badge" class="badge-count hidden">0</span>
         </button>
-        <button id="design-btn" type="button" class="btn-amber-sm">自由設計</button>
+        <button id="design-btn" type="button" class="btn-amber-sm">自由设计</button>
       </div>
     </div>
 
@@ -695,17 +695,17 @@
     <div id="design-banner" class="design-banner hidden">
       <div class="design-top">
         <div class="design-tip">
-          <strong>自由設計模式：</strong>點擊格子輸入預設數字，可儲存到「自訂題目」或直接開始。
+          <strong>自由设计模式：</strong>点擊格子輸入預设数字，可储存到「自定义题目」或直接开始。
         </div>
         <div class="design-actions">
-          <button id="design-clear-btn" type="button" class="btn-amber-outline">清空棋盤</button>
+          <button id="design-clear-btn" type="button" class="btn-amber-outline">清空棋盘</button>
           <button id="design-cancel-btn" type="button" class="btn-ghost-sm">取消</button>
         </div>
       </div>
       <div class="design-input-row">
-        <input id="design-name-input" type="text" maxlength="30" placeholder="輸入自訂題目名稱（例如：書本第 2 題）" class="design-input" />
-        <button id="design-save-btn" type="button" class="btn-amber-solid">儲存到自訂題目</button>
-        <button id="design-start-btn" type="button" class="btn-emerald-solid">完成設計並開始</button>
+        <input id="design-name-input" type="text" maxlength="30" placeholder="輸入自定义题目名稱（例如：書本第 2 题）" class="design-input" />
+        <button id="design-save-btn" type="button" class="btn-amber-solid">储存到自定义题目</button>
+        <button id="design-start-btn" type="button" class="btn-emerald-solid">完成设计并开始</button>
       </div>
     </div>
 
@@ -713,64 +713,55 @@
     <div class="status-bar">
       <span id="progress-text" class="progress-text">已完成 0 / 49 格</span>
       <label class="conflict-label">
-        <input id="conflict-toggle" type="checkbox" checked />
-        <span>自動標示衝突</span>
+        <input id="conflict-toggle" type="checkbox" />
+        <span>自动标示冲突</span>
       </label>
     </div>
 
     <!-- Board Container -->
     <div class="board-wrap">
-      <div id="sudoku-grid" class="sudoku-grid" role="grid" aria-label="數獨棋盤"></div>
+      <div id="sudoku-grid" class="sudoku-grid" role="grid" aria-label="数独棋盘"></div>
 
       <!-- Pause Overlay -->
       <div id="pause-overlay" class="pause-overlay hidden">
-        <p class="pause-title">遊戲已暫停</p>
-        <button id="resume-overlay-btn" type="button" class="resume-btn">繼續作答</button>
+        <p class="pause-title">游戏已暂停</p>
+        <button id="resume-overlay-btn" type="button" class="resume-btn">继续作答</button>
       </div>
-    </div>
-
-    <!-- Action Controls -->
-    <div class="action-grid">
-      <button id="undo-btn" type="button" class="action-btn">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7v6h6"/><path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13"/></svg>
-        復原
-      </button>
-      <button id="erase-btn" type="button" class="action-btn">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 21-4.3-4.3c-1-1-1-2.5 0-3.4l9.6-9.6c1-1 2.5-1 3.4 0l5.6 5.6c1 1 1 2.5 0 3.4L13 21"/><path d="M22 21H7"/><path d="m5 11 9 9"/></svg>
-        清除
-      </button>
-      <button id="notes-btn" type="button" class="action-btn">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
-        <span>筆記 <strong id="notes-badge">關</strong></span>
-      </button>
-      <button id="hint-btn" type="button" class="action-btn">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>
-        提示
-      </button>
-      <button id="check-btn" type="button" class="action-btn">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-        檢查
-      </button>
     </div>
 
     <!-- Number Pad 1-9 -->
     <div id="numpad" class="numpad"></div>
 
+    <!-- Action Controls -->
+    <div class="action-grid">
+      <button id="hint-btn" type="button" class="action-btn">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>
+        提示
+      </button>
+      <button id="notes-btn" type="button" class="action-btn">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+        <span>笔记 <strong id="notes-badge">关</strong></span>
+      </button>
+      <button id="check-btn" type="button" class="action-btn">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        检查
+      </button>
+    </div>
+
     <!-- Footer Actions -->
-    <div class="app-footer">
-      <span id="feedback-msg" class="feedback-msg"></span>
-      <button id="reset-btn" type="button" class="reset-btn">重新開始</button>
+    <div class="app-footer" style="justify-content:flex-end;">
+      <button id="reset-btn" type="button" class="reset-btn">重新开始</button>
     </div>
   </main>
 
   <!-- Reset Confirmation Modal -->
   <div id="reset-modal" class="modal-backdrop hidden">
     <div class="modal-box">
-      <h2 class="modal-title">確定要重新開始嗎？</h2>
-      <p class="modal-desc">這將會清除你目前填入的所有數字與筆記。</p>
+      <h2 class="modal-title">确定要重新开始吗？</h2>
+      <p class="modal-desc">这将会清除你目前填入的所有数字与笔记。</p>
       <div class="modal-actions">
         <button id="cancel-reset-btn" type="button" class="btn-modal-cancel">取消</button>
-        <button id="confirm-reset-btn" type="button" class="btn-modal-danger">確定重設</button>
+        <button id="confirm-reset-btn" type="button" class="btn-modal-danger">确定重设</button>
       </div>
     </div>
   </div>
@@ -779,8 +770,8 @@
   <div id="custom-modal" class="modal-backdrop hidden">
     <div class="modal-box modal-box-lg">
       <div class="modal-header">
-        <h2 class="modal-title">已儲存的自訂題目</h2>
-        <button id="close-custom-btn" type="button" class="icon-btn" aria-label="關閉">
+        <h2 class="modal-title">已储存的自定义题目</h2>
+        <button id="close-custom-btn" type="button" class="icon-btn" aria-label="关闭">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
         </button>
       </div>
@@ -798,7 +789,7 @@
           </span>
           <h2 id="hint-modal-title" class="modal-title">推理提示</h2>
         </div>
-        <button id="close-hint-x" type="button" class="icon-btn" aria-label="關閉">
+        <button id="close-hint-x" type="button" class="icon-btn" aria-label="关闭">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
         </button>
       </div>
@@ -818,7 +809,7 @@
       <h2 class="modal-title" style="font-size:1.2rem;">恭喜完成！</h2>
       <p id="victory-stats" class="modal-desc"></p>
       <div class="modal-actions modal-actions-center">
-        <button id="close-victory-btn" type="button" class="btn-modal-cancel">查看棋盤</button>
+        <button id="close-victory-btn" type="button" class="btn-modal-cancel">查看棋盘</button>
         <button id="play-again-btn" type="button" class="btn-modal-primary">再玩一次</button>
       </div>
     </div>
@@ -958,7 +949,7 @@
       let solveResult = solveSudoku(initialBoard);
       let hasSolution = solveResult.solved;
       let solution = solveResult.grid;
-      let puzzleTitle = '數獨題目 #1';
+      let puzzleTitle = '数独书（第一页）同款';
 
       let board = initialBoard.map(r => r.slice());
       let notes = Array.from({ length: 9 }, () => Array.from({ length: 9 }, () => []));
@@ -968,7 +959,7 @@
       let notesMode = false;
       let designMode = false;
       let designDraft = Array.from({ length: 9 }, () => Array(9).fill(0));
-      let autoConflict = true;
+      let autoConflict = false;
       let soundEnabled = true;
       let paused = false;
       let completed = false;
@@ -984,7 +975,6 @@
       const numpadEl = document.getElementById('numpad');
       const timerEl = document.getElementById('timer-display');
       const progressEl = document.getElementById('progress-text');
-      const feedbackEl = document.getElementById('feedback-msg');
       const notesBtn = document.getElementById('notes-btn');
       const notesBadge = document.getElementById('notes-badge');
       const conflictToggle = document.getElementById('conflict-toggle');
@@ -996,8 +986,6 @@
       const soundBtn = document.getElementById('sound-btn');
       const soundOnIcon = document.getElementById('sound-on-icon');
       const soundOffIcon = document.getElementById('sound-off-icon');
-      const undoBtn = document.getElementById('undo-btn');
-      const eraseBtn = document.getElementById('erase-btn');
       const hintBtn = document.getElementById('hint-btn');
       const checkBtn = document.getElementById('check-btn');
       const resetBtn = document.getElementById('reset-btn');
@@ -1080,7 +1068,7 @@
         if (list.length === 0) {
           const empty = document.createElement('p');
           empty.className = 'custom-empty';
-          empty.textContent = '尚未儲存任何自訂題目，點「自由設計」即可建立並儲存。';
+          empty.textContent = '尚未储存任何自定义题目，点「自由设计」即可建立并储存。';
           customPuzzleList.appendChild(empty);
           return;
         }
@@ -1097,7 +1085,7 @@
           title.textContent = item.name;
           const meta = document.createElement('div');
           meta.className = 'custom-item-meta';
-          meta.textContent = `${givens} 格預設`;
+          meta.textContent = `${givens} 格预设`;
           info.appendChild(title);
           info.appendChild(meta);
 
@@ -1107,17 +1095,17 @@
           const playBtn = document.createElement('button');
           playBtn.type = 'button';
           playBtn.className = 'btn-primary-sm';
-          playBtn.textContent = '遊玩';
+          playBtn.textContent = '游玩';
           playBtn.addEventListener('click', () => {
             loadPuzzle(item.grid, item.name);
             customModal.classList.add('hidden');
-            setFeedback(`已載入「${item.name}」。`, 'success');
+            setFeedback(`已载入「${item.name}」。`, 'success');
           });
 
           const delBtn = document.createElement('button');
           delBtn.type = 'button';
           delBtn.className = 'btn-del-sm';
-          delBtn.textContent = '刪除';
+          delBtn.textContent = '删除';
           delBtn.addEventListener('click', () => {
             const next = getCustomPuzzles().filter(x => x.id !== item.id);
             saveCustomPuzzles(next);
@@ -1159,7 +1147,9 @@
             solution = solveResult.grid;
           }
           if (typeof data.puzzleTitle === 'string' && data.puzzleTitle) {
-            puzzleTitle = data.puzzleTitle;
+            puzzleTitle = (data.puzzleTitle === '数独题目 #1' || data.puzzleTitle === '數獨題目 #1')
+              ? '数独书（第一页）同款'
+              : data.puzzleTitle;
           }
           if (Array.isArray(data.board) && data.board.length === 9) {
             board = data.board;
@@ -1190,14 +1180,7 @@
         }, 1000);
       }
 
-      function setFeedback(msg, tone = 'neutral') {
-        feedbackEl.textContent = msg;
-        feedbackEl.className = 'feedback-msg' + (
-          tone === 'error' ? ' feedback-error' :
-          tone === 'success' ? ' feedback-success' :
-          ''
-        );
-      }
+      function setFeedback() {}
 
       function getConflicts(grid) {
         const conflicts = new Set();
@@ -1222,7 +1205,7 @@
               if (designDraft[r][c] !== 0) givens++;
             }
           }
-          progressEl.textContent = `設計模式：已填入 ${givens} 個預設數字`;
+          progressEl.textContent = `设计模式：已填入 ${givens} 个预设数字`;
           return;
         }
 
@@ -1252,7 +1235,7 @@
           playTone(523.25, 0.15);
           setTimeout(() => playTone(659.25, 0.15), 120);
           setTimeout(() => playTone(783.99, 0.3), 240);
-          victoryStats.textContent = `用時 ${formatTime(elapsedSeconds)}，使用提示 ${hintsUsed} 次。`;
+          victoryStats.textContent = `用时 ${formatTime(elapsedSeconds)}，使用提示 ${hintsUsed} 次。`;
           victoryModal.classList.remove('hidden');
         }
       }
@@ -1264,7 +1247,7 @@
         const selBoxR = selected ? Math.floor(selected.r / 3) : -1;
         const selBoxC = selected ? Math.floor(selected.c / 3) : -1;
 
-        puzzleTitleEl.textContent = designMode ? '自由設計題目' : puzzleTitle;
+        puzzleTitleEl.textContent = designMode ? '自由设计题目' : puzzleTitle;
         designBanner.classList.toggle('hidden', !designMode);
 
         gridEl.innerHTML = '';
@@ -1337,7 +1320,7 @@
         });
 
         notesBtn.classList.toggle('notes-active', notesMode && !designMode);
-        notesBadge.textContent = notesMode ? '開' : '關';
+        notesBadge.textContent = notesMode ? '开' : '关';
 
         timerEl.textContent = formatTime(elapsedSeconds);
         checkCompletion();
@@ -1379,7 +1362,7 @@
 
         if (completed) return;
         if (initialBoard[r][c] !== 0) {
-          setFeedback('這是題目預設數字，無法修改。');
+          setFeedback('这是题目预设数字，无法修改。');
           return;
         }
         hintTarget = null;
@@ -1477,7 +1460,7 @@
               hintTarget = { r, c };
               hintsUsed++;
               playTone(260, 0.12, 'triangle');
-              const msg = '亮起來的這一格跟同一排或同一塊裡的數字重複囉，檢查一下！';
+              const msg = '亮起来的这一格跟同一排或同一塊里的数字重复囉，检查一下！';
               setFeedback(msg, 'error');
               showHintModal('小提醒', msg, true);
               saveState();
@@ -1496,7 +1479,7 @@
                 hintTarget = { r, c };
                 hintsUsed++;
                 playTone(300, 0.12, 'triangle');
-                const msg = '亮起來的這一格填錯囉，先把它擦掉再重新想想看！';
+                const msg = '亮起来的这一格填错啦，先把它擦掉再重新想想看！';
                 setFeedback(msg, 'error');
                 showHintModal('小提醒', msg, true);
                 saveState();
@@ -1519,7 +1502,7 @@
                 hintTarget = { r, c };
                 hintsUsed++;
                 playTone(620, 0.1);
-                const msg = '看看亮起來的這一格！把同一橫排、直排和九宮格裡已經有的數字扣掉，只剩下 1 個數字可以填喔！';
+                const msg = '看看亮起来的这一格！把同一横排、直排和九宫格里已经有的数字扣掉，只剩下 1 个数字可以填哦！';
                 setFeedback(msg, 'success');
                 showHintModal('推理提示', msg, false);
                 saveState();
@@ -1547,7 +1530,7 @@
               hintTarget = spots[0];
               hintsUsed++;
               playTone(620, 0.1);
-              const msg = '看看亮起來的這一橫排！有一個數字在這一排裡，只剩下這一格可以放喔！';
+              const msg = '看看亮起来的这一横排！有一个数字在这一排里，只剩下这一格可以放哦！';
               setFeedback(msg, 'success');
               showHintModal('推理提示', msg, false);
               saveState();
@@ -1569,7 +1552,7 @@
               hintTarget = spots[0];
               hintsUsed++;
               playTone(620, 0.1);
-              const msg = '看看亮起來的這一直排！有一個數字在這一排裡，只剩下這一格可以放喔！';
+              const msg = '看看亮起来的这一直排！有一个数字在这一排里，只剩下这一格可以放哦！';
               setFeedback(msg, 'success');
               showHintModal('推理提示', msg, false);
               saveState();
@@ -1598,7 +1581,7 @@
                 hintTarget = spots[0];
                 hintsUsed++;
                 playTone(620, 0.1);
-                const msg = '看看亮起來的這個九宮格！有一個數字在裡面，只剩下這一格可以放喔！';
+                const msg = '看看亮起来的这个九宫格！有一个数字在里面，只剩下这一格可以放哦！';
                 setFeedback(msg, 'success');
                 showHintModal('推理提示', msg, false);
                 saveState();
@@ -1615,7 +1598,7 @@
           hintTarget = bestCell;
           hintsUsed++;
           playTone(540, 0.08);
-          const msg = `看看亮起來的這一格！它現在只剩下 ${bestCands.length} 個可能的數字，可以先用「筆記」記下來慢慢猜喔！`;
+          const msg = `看看亮起来的这一格！它现在只剩下 ${bestCands.length} 个可能的数字，可以先用「笔记」记下来慢慢猜喔！`;
           setFeedback(msg, 'success');
           showHintModal('推理提示', msg, false);
           saveState();
@@ -1645,13 +1628,13 @@
           }
         }
         if (filledCount === 0) {
-          setFeedback('目前尚未填入任何數字。');
+          showHintModal('检查结果', '目前还没有填入任何数字哦！', false);
         } else if (wrongCount === 0) {
           playTone(660, 0.12);
-          setFeedback('目前填入的數字全部正確！', 'success');
+          showHintModal('检查结果', '目前填入的数字全部正确，继续加油！', false);
         } else {
           playTone(220, 0.15, 'triangle');
-          setFeedback(`發現 ${wrongCount} 個錯誤，已用紅色標示。`, 'error');
+          showHintModal('检查结果', `发现 ${wrongCount} 个地方不太对，已经帮你用红色标出来啦！`, true);
         }
         render();
       }
@@ -1688,7 +1671,7 @@
 
       function resetGame() {
         loadPuzzle(initialBoard, puzzleTitle, hasSolution ? solution : null);
-        setFeedback('已重新開始。');
+        setFeedback('已重新开始。');
       }
 
       function togglePause() {
@@ -1765,11 +1748,11 @@
 
       randomBtn.addEventListener('click', () => {
         const diff = difficultySelect.value;
-        const diffLabel = diff === 'easy' ? '簡單' : diff === 'hard' ? '困難' : '中等';
+        const diffLabel = diff === 'easy' ? '简单' : diff === 'hard' ? '困难' : '中等';
         const { puzzle, solution: sol } = generateRandomPuzzle(diff);
-        loadPuzzle(puzzle, `隨機數獨（${diffLabel}）`, sol);
+        loadPuzzle(puzzle, `随机题目（${diffLabel}）`, sol);
         playTone(620, 0.08);
-        setFeedback(`已生成全新「${diffLabel}」題目！`, 'success');
+        setFeedback(`已生成全新「${diffLabel}」题目！`, 'success');
       });
 
       customListBtn.addEventListener('click', () => {
@@ -1787,13 +1770,13 @@
         pauseOverlay.classList.add('hidden');
         designDraft = initialBoard.map(r => r.slice());
         designNameInput.value = '';
-        setFeedback('進入自由設計模式：可修改或清空棋盤。');
+        setFeedback('进入自由设计模式：可修改或清空棋盘。');
         render();
       });
 
       designSaveBtn.addEventListener('click', () => {
         if (hasAnyConflict(designDraft)) {
-          setFeedback('目前設計的題目有同行、同列或同宮重複衝突，請先修正！', 'error');
+          showHintModal('无法完成', '目前设计的题目有数字重复冲突，请先修正！', true);
           playTone(220, 0.15, 'triangle');
           return;
         }
@@ -1802,18 +1785,18 @@
           for (let c = 0; c < 9; c++) if (designDraft[r][c] !== 0) givens++;
         }
         if (givens === 0) {
-          setFeedback('請至少填入一個預設數字再儲存！', 'error');
+          showHintModal('无法保存', '请至少填入一个预设数字再储存！', true);
           return;
         }
         const solCount = countSolutions(designDraft, 2);
         if (solCount === 0) {
-          setFeedback('此盤面目前無解，請調整預設數字後再儲存！', 'error');
+          showHintModal('无法保存', '这个盘面目前没有解法，请调整预设数字后再试！', true);
           playTone(220, 0.15, 'triangle');
           return;
         }
         const list = getCustomPuzzles();
         const rawName = designNameInput.value.trim();
-        const name = rawName || `自訂題目 #${list.length + 1}`;
+        const name = rawName || `自定义题目 #${list.length + 1}`;
         list.unshift({
           id: `${Date.now()}_${Math.random().toString(36).slice(2, 7)}`,
           name,
@@ -1822,24 +1805,24 @@
         saveCustomPuzzles(list);
         updateCustomBadge();
         playTone(660, 0.12);
-        setFeedback(`已儲存「${name}」到自訂題目！`, 'success');
+        showHintModal('保存成功', `已将「${name}」存到自定义题目清单！`, false);
       });
 
       designClearBtn.addEventListener('click', () => {
         designDraft = Array.from({ length: 9 }, () => Array(9).fill(0));
-        setFeedback('已清空設計棋盤。');
+        setFeedback('已清空设计棋盘。');
         render();
       });
 
       designCancelBtn.addEventListener('click', () => {
         designMode = false;
-        setFeedback('已取消設計。');
+        setFeedback('已取消设计。');
         render();
       });
 
       designStartBtn.addEventListener('click', () => {
         if (hasAnyConflict(designDraft)) {
-          setFeedback('目前設計的題目有同行、同列或同宮重複衝突，請先修正！', 'error');
+          showHintModal('无法完成', '目前设计的题目有数字重复冲突，请先修正！', true);
           playTone(220, 0.15, 'triangle');
           return;
         }
@@ -1848,21 +1831,21 @@
           for (let c = 0; c < 9; c++) if (designDraft[r][c] !== 0) givens++;
         }
         if (givens === 0) {
-          setFeedback('請至少填入一個預設數字再開始！', 'error');
+          showHintModal('无法开始', '请至少填入一个预设数字再开始！', true);
           return;
         }
         const solCount = countSolutions(designDraft, 2);
         if (solCount === 0) {
-          setFeedback('此盤面目前無解，請調整預設數字！', 'error');
+          showHintModal('无法开始', '这个盘面目前没有解法，请调整預设数字！', true);
           playTone(220, 0.15, 'triangle');
           return;
         }
-        const customTitle = designNameInput.value.trim() || '自訂設計題目';
+        const customTitle = designNameInput.value.trim() || '自定义设计题目';
         loadPuzzle(designDraft, customTitle);
         if (solCount > 1) {
-          setFeedback('題目已開始（注意：此設計題目有多組解）。');
+          setFeedback('题目已开始（注意：此设计题目有多組解）。');
         } else {
-          setFeedback('題目設計完成（唯一解），開始作答！', 'success');
+          setFeedback('题目设计完成（唯一解），开始作答！', 'success');
         }
       });
 
@@ -1871,8 +1854,6 @@
         notesMode = !notesMode;
         render();
       });
-      undoBtn.addEventListener('click', undo);
-      eraseBtn.addEventListener('click', eraseCell);
       hintBtn.addEventListener('click', giveHint);
       checkBtn.addEventListener('click', checkBoard);
       conflictToggle.addEventListener('change', () => {
@@ -1903,12 +1884,17 @@
 
       function seedPresetToCustom() {
         try {
-          if (localStorage.getItem(PRESET_SEEDED_KEY)) return;
           const list = getCustomPuzzles();
-          if (!list.some(item => item.id === 'preset_puzzle_1')) {
+          const existing = list.find(item => item.id === 'preset_puzzle_1');
+          if (existing) {
+            if (existing.name !== '数独书（第一页）同款') {
+              existing.name = '数独书（第一页）同款';
+              saveCustomPuzzles(list);
+            }
+          } else if (!localStorage.getItem(PRESET_SEEDED_KEY)) {
             list.push({
               id: 'preset_puzzle_1',
-              name: '題目 #1',
+              name: '数独书（第一页）同款',
               grid: PRESET_PUZZLE_1.map(r => r.slice())
             });
             saveCustomPuzzles(list);
