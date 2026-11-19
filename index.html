@@ -652,7 +652,7 @@
         </div>
         <div style="min-width:0;">
           <h1 id="puzzle-title" class="brand-title">数独书（第一页）同款</h1>
-          <p class="brand-sub">每横排、直排、九宫格，1–9 不会重复</p>
+          <p class="brand-sub">横排、直排、九宫格，1–9 不会重复~</p>
         </div>
       </div>
 
@@ -1160,6 +1160,20 @@
           if (typeof data.elapsedSeconds === 'number') elapsedSeconds = data.elapsedSeconds;
           if (typeof data.hintsUsed === 'number') hintsUsed = data.hintsUsed;
           if (typeof data.completed === 'boolean') completed = data.completed;
+
+          let hasUserProgress = false;
+          for (let r = 0; r < 9; r++) {
+            for (let c = 0; c < 9; c++) {
+              if ((initialBoard[r][c] === 0 && board[r][c] !== 0) || (notes[r][c] && notes[r][c].length > 0)) {
+                hasUserProgress = true;
+              }
+            }
+          }
+          if (!hasUserProgress) {
+            elapsedSeconds = 0;
+            hintsUsed = 0;
+            completed = false;
+          }
         } catch (e) {}
       }
 
@@ -1908,6 +1922,17 @@
       updateCustomBadge();
       render();
       startTimer();
+
+      window.addEventListener('pageshow', () => {
+        startTimer();
+        render();
+      });
+      document.addEventListener('visibilitychange', () => {
+        if (!document.hidden) {
+          startTimer();
+          timerEl.textContent = formatTime(elapsedSeconds);
+        }
+      });
     })();
   </script>
 </body>
