@@ -359,6 +359,14 @@
     .cell-conflict-bg { background-color: #ffe4e6; }
     .cell-selected { background-color: rgba(191, 219, 254, 0.9); }
     .cell-selected-design { background-color: rgba(253, 230, 138, 0.9); }
+    @keyframes hintPulse {
+      0%, 100% { box-shadow: inset 0 0 0 3px #f59e0b; background-color: #fef3c7; }
+      50% { box-shadow: inset 0 0 0 4px #d97706; background-color: #fde68a; }
+    }
+    .cell-hint-pulse {
+      animation: hintPulse 1.3s ease-in-out infinite;
+      z-index: 2;
+    }
 
     .cell-given { font-weight: 700; color: #0f172a; }
     .cell-user { font-weight: 600; color: #2563eb; }
@@ -780,6 +788,27 @@
     </div>
   </div>
 
+  <!-- Hint Modal -->
+  <div id="hint-modal" class="modal-backdrop hidden">
+    <div class="modal-box">
+      <div class="modal-header" style="margin-bottom:8px;">
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span id="hint-modal-icon" style="display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:9px;background:#dbeafe;color:#2563eb;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>
+          </span>
+          <h2 id="hint-modal-title" class="modal-title">推理提示</h2>
+        </div>
+        <button id="close-hint-x" type="button" class="icon-btn" aria-label="關閉">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <p id="hint-modal-msg" class="modal-desc" style="line-height:1.6;"></p>
+      <div class="modal-actions">
+        <button id="close-hint-btn" type="button" class="btn-modal-primary">知道了</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Victory Modal -->
   <div id="victory-modal" class="modal-backdrop hidden">
     <div class="modal-box victory-box">
@@ -935,6 +964,7 @@
       let notes = Array.from({ length: 9 }, () => Array.from({ length: 9 }, () => []));
       let history = [];
       let selected = { r: 0, c: 2 };
+      let hintTarget = null;
       let notesMode = false;
       let designMode = false;
       let designDraft = Array.from({ length: 9 }, () => Array(9).fill(0));
@@ -993,6 +1023,12 @@
       const customModal = document.getElementById('custom-modal');
       const closeCustomBtn = document.getElementById('close-custom-btn');
       const customPuzzleList = document.getElementById('custom-puzzle-list');
+      const hintModal = document.getElementById('hint-modal');
+      const hintModalIcon = document.getElementById('hint-modal-icon');
+      const hintModalTitle = document.getElementById('hint-modal-title');
+      const hintModalMsg = document.getElementById('hint-modal-msg');
+      const closeHintBtn = document.getElementById('close-hint-btn');
+      const closeHintX = document.getElementById('close-hint-x');
 
       function playTone(freq, duration, type = 'sine', gainVal = 0.05) {
         if (!soundEnabled) return;
@@ -1248,7 +1284,10 @@
             const isSameNum = selVal !== 0 && val === selVal;
             const isConflict = conflicts.has(key) || (!designMode && checkedWrongCells.has(key));
 
-            if (isSelected) {
+            const isHintTarget = !designMode && hintTarget && hintTarget.r === r && hintTarget.c === c;
+            if (isHintTarget) {
+              cell.classList.add('cell-hint-pulse');
+            } else if (isSelected) {
               cell.classList.add(designMode ? 'cell-selected-design' : 'cell-selected');
             } else if (isConflict && (!isGiven || designMode)) {
               cell.classList.add('cell-conflict-bg');
@@ -1343,6 +1382,7 @@
           setFeedback('這是題目預設數字，無法修改。');
           return;
         }
+        hintTarget = null;
         checkedWrongCells.delete(`${r},${c}`);
         pushHistory();
 
@@ -1404,38 +1444,183 @@
         render();
       }
 
+      function showHintModal(title, msg, isError = false) {
+        hintModalTitle.textContent = title;
+        hintModalMsg.textContent = msg;
+        if (isError) {
+          hintModalIcon.style.background = '#ffe4e6';
+          hintModalIcon.style.color = '#e11d48';
+        } else {
+          hintModalIcon.style.background = '#dbeafe';
+          hintModalIcon.style.color = '#2563eb';
+        }
+        hintModal.classList.remove('hidden');
+      }
+
+      function getCandidates(grid, r, c) {
+        if (grid[r][c] !== 0) return [];
+        const cands = [];
+        for (let val = 1; val <= 9; val++) {
+          if (isPlacementValid(grid, r, c, val)) cands.push(val);
+        }
+        return cands;
+      }
+
       function giveHint() {
         if (designMode || paused || completed) return;
-        if (!hasSolution) {
-          setFeedback('此盤面無標準唯一解，暫無法提供答案提示。', 'error');
-          return;
-        }
-        let target = null;
-        if (selected && initialBoard[selected.r][selected.c] === 0 && board[selected.r][selected.c] !== solution[selected.r][selected.c]) {
-          target = { r: selected.r, c: selected.c };
-        } else {
-          const candidates = [];
-          for (let r = 0; r < 9; r++) {
-            for (let c = 0; c < 9; c++) {
-              if (board[r][c] !== solution[r][c]) candidates.push({ r, c });
+
+        // 1. If there are already rule conflicts on the board, point to one first
+        for (let r = 0; r < 9; r++) {
+          for (let c = 0; c < 9; c++) {
+            if (initialBoard[r][c] === 0 && board[r][c] !== 0 && !isPlacementValid(board, r, c, board[r][c])) {
+              selected = { r, c };
+              hintTarget = { r, c };
+              hintsUsed++;
+              playTone(260, 0.12, 'triangle');
+              const msg = '亮起來的這一格跟同一排或同一塊裡的數字重複囉，檢查一下！';
+              setFeedback(msg, 'error');
+              showHintModal('小提醒', msg, true);
+              saveState();
+              render();
+              return;
             }
           }
-          if (candidates.length > 0) {
-            target = candidates[Math.floor(Math.random() * candidates.length)];
+        }
+
+        // 2. If there's a wrong entry vs solution, guide without spoiling the number
+        if (hasSolution) {
+          for (let r = 0; r < 9; r++) {
+            for (let c = 0; c < 9; c++) {
+              if (initialBoard[r][c] === 0 && board[r][c] !== 0 && board[r][c] !== solution[r][c]) {
+                selected = { r, c };
+                hintTarget = { r, c };
+                hintsUsed++;
+                playTone(300, 0.12, 'triangle');
+                const msg = '亮起來的這一格填錯囉，先把它擦掉再重新想想看！';
+                setFeedback(msg, 'error');
+                showHintModal('小提醒', msg, true);
+                saveState();
+                render();
+                return;
+              }
+            }
           }
         }
-        if (!target) return;
-        pushHistory();
-        board[target.r][target.c] = solution[target.r][target.c];
-        notes[target.r][target.c] = [];
-        checkedWrongCells.delete(`${target.r},${target.c}`);
-        clearPeerNotes(target.r, target.c, board[target.r][target.c]);
-        selected = target;
-        hintsUsed++;
-        playTone(700, 0.1);
-        setFeedback('已為你填入一格提示。', 'success');
-        saveState();
-        render();
+
+        // 3. Look for a Naked Single (cell with only 1 valid candidate)
+        let bestCell = null;
+        let bestCands = null;
+        for (let r = 0; r < 9; r++) {
+          for (let c = 0; c < 9; c++) {
+            if (board[r][c] === 0) {
+              const cands = getCandidates(board, r, c);
+              if (cands.length === 1) {
+                selected = { r, c };
+                hintTarget = { r, c };
+                hintsUsed++;
+                playTone(620, 0.1);
+                const msg = '看看亮起來的這一格！把同一橫排、直排和九宮格裡已經有的數字扣掉，只剩下 1 個數字可以填喔！';
+                setFeedback(msg, 'success');
+                showHintModal('推理提示', msg, false);
+                saveState();
+                render();
+                return;
+              }
+              if (cands.length > 0 && (!bestCands || cands.length < bestCands.length)) {
+                bestCell = { r, c };
+                bestCands = cands;
+              }
+            }
+          }
+        }
+
+        // 4. Look for a Hidden Single in any row, column, or 3x3 box
+        for (let r = 0; r < 9; r++) {
+          for (let val = 1; val <= 9; val++) {
+            const spots = [];
+            for (let c = 0; c < 9; c++) {
+              if (board[r][c] === val) { spots.length = 0; break; }
+              if (board[r][c] === 0 && isPlacementValid(board, r, c, val)) spots.push({ r, c });
+            }
+            if (spots.length === 1) {
+              selected = spots[0];
+              hintTarget = spots[0];
+              hintsUsed++;
+              playTone(620, 0.1);
+              const msg = '看看亮起來的這一橫排！有一個數字在這一排裡，只剩下這一格可以放喔！';
+              setFeedback(msg, 'success');
+              showHintModal('推理提示', msg, false);
+              saveState();
+              render();
+              return;
+            }
+          }
+        }
+
+        for (let c = 0; c < 9; c++) {
+          for (let val = 1; val <= 9; val++) {
+            const spots = [];
+            for (let r = 0; r < 9; r++) {
+              if (board[r][c] === val) { spots.length = 0; break; }
+              if (board[r][c] === 0 && isPlacementValid(board, r, c, val)) spots.push({ r, c });
+            }
+            if (spots.length === 1) {
+              selected = spots[0];
+              hintTarget = spots[0];
+              hintsUsed++;
+              playTone(620, 0.1);
+              const msg = '看看亮起來的這一直排！有一個數字在這一排裡，只剩下這一格可以放喔！';
+              setFeedback(msg, 'success');
+              showHintModal('推理提示', msg, false);
+              saveState();
+              render();
+              return;
+            }
+          }
+        }
+
+        for (let br = 0; br < 3; br++) {
+          for (let bc = 0; bc < 3; bc++) {
+            const boxNum = br * 3 + bc + 1;
+            for (let val = 1; val <= 9; val++) {
+              const spots = [];
+              let exists = false;
+              for (let i = 0; i < 3; i++) {
+                for (let j = 0; j < 3; j++) {
+                  const r = br * 3 + i;
+                  const c = bc * 3 + j;
+                  if (board[r][c] === val) exists = true;
+                  else if (board[r][c] === 0 && isPlacementValid(board, r, c, val)) spots.push({ r, c });
+                }
+              }
+              if (!exists && spots.length === 1) {
+                selected = spots[0];
+                hintTarget = spots[0];
+                hintsUsed++;
+                playTone(620, 0.1);
+                const msg = '看看亮起來的這個九宮格！有一個數字在裡面，只剩下這一格可以放喔！';
+                setFeedback(msg, 'success');
+                showHintModal('推理提示', msg, false);
+                saveState();
+                render();
+                return;
+              }
+            }
+          }
+        }
+
+        // 5. Fallback: point to the cell with fewest candidates
+        if (bestCell && bestCands) {
+          selected = bestCell;
+          hintTarget = bestCell;
+          hintsUsed++;
+          playTone(540, 0.08);
+          const msg = `看看亮起來的這一格！它現在只剩下 ${bestCands.length} 個可能的數字，可以先用「筆記」記下來慢慢猜喔！`;
+          setFeedback(msg, 'success');
+          showHintModal('推理提示', msg, false);
+          saveState();
+          render();
+        }
       }
 
       function checkBoard() {
@@ -1486,6 +1671,7 @@
         board = initialBoard.map(r => r.slice());
         notes = Array.from({ length: 9 }, () => Array.from({ length: 9 }, () => []));
         history = [];
+        hintTarget = null;
         checkedWrongCells.clear();
         elapsedSeconds = 0;
         hintsUsed = 0;
@@ -1529,6 +1715,7 @@
         const cell = e.target.closest('.sudoku-cell');
         if (!cell) return;
         selected = { r: Number(cell.dataset.row), c: Number(cell.dataset.col) };
+        hintTarget = null;
         playTone(420, 0.03, 'sine', 0.02);
         render();
       });
@@ -1537,6 +1724,10 @@
         if (document.activeElement === designNameInput) return;
         if (resetModal && !resetModal.classList.contains('hidden')) return;
         if (customModal && !customModal.classList.contains('hidden')) return;
+        if (hintModal && !hintModal.classList.contains('hidden')) {
+          if (e.key === 'Escape' || e.key === 'Enter') hintModal.classList.add('hidden');
+          return;
+        }
         if (paused) return;
         if (e.key >= '1' && e.key <= '9') {
           e.preventDefault();
@@ -1705,6 +1896,8 @@
       });
       cancelResetBtn.addEventListener('click', () => resetModal.classList.add('hidden'));
       confirmResetBtn.addEventListener('click', resetGame);
+      closeHintBtn.addEventListener('click', () => hintModal.classList.add('hidden'));
+      closeHintX.addEventListener('click', () => hintModal.classList.add('hidden'));
       closeVictoryBtn.addEventListener('click', () => victoryModal.classList.add('hidden'));
       playAgainBtn.addEventListener('click', resetGame);
 
